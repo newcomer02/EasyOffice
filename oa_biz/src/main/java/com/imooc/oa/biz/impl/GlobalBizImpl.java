@@ -3,6 +3,7 @@ package com.imooc.oa.biz.impl;
 import com.imooc.oa.biz.GlobalBiz;
 import com.imooc.oa.dao.EmployeeDao;
 import com.imooc.oa.entity.Employee;
+import org.apache.shiro.crypto.hash.Md5Hash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class GlobalBizImpl implements GlobalBiz {
     }
 
     public void changePassword(Employee employee) {
+        employee.setPassword(new Md5Hash(employee.getPassword(),employee.getSn()).toString());
         employeeDao.update(employee);
     }
 }

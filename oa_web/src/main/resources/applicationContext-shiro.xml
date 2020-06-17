@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/aop
+      http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+
+    <!-- shiro的web过滤器 -->
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        
+        <property name="filters">
+            <map>
+                <entry key="authc" value-ref="formFilter"></entry>
+            </map>
+        </property>
+        
+        <property name="securityManager" ref="securityManager"></property>
+
+        <property name="loginUrl" value="/login"></property>
+        <property name="unauthorizedUrl" value="/refuse.jsp"></property>
+        <property name="successUrl" value="/login"></property>
+        <property name="filterChainDefinitions">
+            <value>
+                <!---->
+                /quit = logout
+                <!--无需认证即可访问的资源-->
+                /assets/** = anon
+                /js/** = anon
+                /vendor/** = anon
+                <!--需要认证 -->
+                /** = authc
+            </value>
+        </property>
+    </bean>
+
+    <bean id="formFilter" class="com.imooc.oa.shiro.MyFormAuthenticationFilter"></bean>
+
+    <!-- 安全管理器securityManager -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realm" ref="CustomRealm"></property>
+        <property name="cacheManager" ref="ehCacheManager"/>
+    </bean>
+    <!-- 自定义Realm -->
+    <bean id="CustomRealm" class="com.imooc.oa.shiro.realm.CustomRealm">
+        <property name="credentialsMatcher" ref="credentialMatcher"></property>
+    </bean>
+    <!-- 凭证匹配器 -->
+    <bean id="credentialMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="md5"></property>
+        <property name="hashIterations" value="1"></property>
+    </bean>
+
+    <!-- 配置 shiro 的 ehcache 缓存相关,这个缓存只和 Realm 相关 -->
+    <bean id="ehCacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager"></bean>
+
+    <!-- 配置 Spring 的 EhCacheManagerFactoryBean ,须要 spring-context-support 的支持 -->
+    <bean id="ehCacheManagerFactoryBean" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <!-- 配置 Spring 的 EhCacheCacheManager,须要 spring-context-support 的支持 -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehCacheManagerFactoryBean"/>
+    </bean>
+</beans>

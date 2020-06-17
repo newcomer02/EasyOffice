@@ -1,0 +1,10 @@
+.idea/
+oa_dao/target/
+oa_biz/target/
+oa_web/target/
+
+oa.iml
+oa_dao/oa_dao.iml
+oa_biz/oa_biz.iml
+oa_web/oa_web.iml
+

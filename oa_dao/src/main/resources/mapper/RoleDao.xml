@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.oa.dao.RoleDao">
+
+    <resultMap id="role" type="Role">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="role_name" column="role_name" javaType="String"/>
+        <association property="user_role" column="id" javaType="User_role">
+            <id property="id" column="uid" javaType="Integer"/>
+            <result property="user_id" column="user_id" javaType="String"/>
+            <result property="role_id" column="role_id" javaType="Integer"/>
+        </association>
+    </resultMap>
+
+    <insert id="insert" parameterType="User_role">
+        insert into user_role(`user_id`,`role_id`) values (#{user_id},#{role_id})
+    </insert>
+
+    <delete id="delete" parameterType="String">
+        delete from user_role where user_id = #{sn}
+    </delete>
+
+    <select id="select" parameterType="String" resultMap="role">
+        select r.*,u.id uid,u.user_id,u.role_id from role r left join user_role u on u.role_id=r.id where u.user_id=#{sn}
+    </select>
+
+    <select id="selectByRoleName" parameterType="String" resultType="Integer">
+        select id from role where role_name=#{name}
+    </select>
+
+</mapper>

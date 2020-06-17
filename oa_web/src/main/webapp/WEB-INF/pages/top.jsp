@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.imooc.oa.global.Contant" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <c:set var="user" value="${sessionScope.employee}"/>
 <!DOCTYPE html>
 <html>
@@ -107,31 +108,40 @@
                 </li>
                 <li class="sidebar-label pt15">基础信息管理</li>
                 <li>
-                    <c:if test="${user.post == Contant.POST_GM || user.post == Contant.POST_FM}">
+<%--                    <c:if test="${user.post == Contant.POST_GM || user.post == Contant.POST_FM}">--%>
+                    <shiro:hasPermission name="employee:*">
                         <a class="accordion-toggle" href="#">
                             <span class="glyphicon glyphicon-check"></span>
                             <span class="sidebar-title">员工管理</span>
                             <span class="caret"></span>
                         </a>
-                        <ul class="nav sub-nav">
+                    </shiro:hasPermission>
+                    <ul class="nav sub-nav">
+                        <shiro:hasPermission name="employee:list">
                             <li>
                                 <a href="${pageContext.request.contextPath}/employee/list">
                                     <span class="glyphicon glyphicon-calendar"></span> 所有员工 </a>
                             </li>
+                        </shiro:hasPermission>
+                        <shiro:hasPermission name="employee:add">
                             <li class="active">
                                 <a href="${pageContext.request.contextPath}/employee/to_add">
                                     <span class="glyphicon glyphicon-check"></span> 添加员工 </a>
                             </li>
-                        </ul>
-                    </c:if>
+                        </shiro:hasPermission>
+                    </ul>
+                    
+<%--                    </c:if>--%>
                 </li>
-                <li>
-                    <c:if test="${user.post == Contant.POST_GM}">
+                <shiro:hasPermission name="department:*">
+                    <li>
+    <%--                    <c:if test="${user.post == Contant.POST_GM}">--%>
                         <a class="accordion-toggle" href="#">
                             <span class="fa fa-columns"></span>
                             <span class="sidebar-title">部门管理</span>
                             <span class="caret"></span>
                         </a>
+
                         <ul class="nav sub-nav">
                             <li>
                                 <a href="${pageContext.request.contextPath}/department/list">
@@ -142,9 +152,9 @@
                                     <span class="glyphicon glyphicon-check"></span> 添加部门 </a>
                             </li>
                         </ul>
-                    </c:if>
-
-                </li>
+    <%--                    </c:if>--%>
+                    </li>
+                </shiro:hasPermission>
             </ul>
         </div>
     </aside>

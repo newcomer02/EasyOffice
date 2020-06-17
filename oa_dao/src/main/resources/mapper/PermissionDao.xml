@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.4//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.imooc.oa.dao.PermissionDao">
+
+    <resultMap id="permission" type="Permission">
+        <id property="id" column="id" javaType="Integer"/>
+        <result property="role_id" column="role_id" javaType="Integer"/>
+        <result property="per_id" column="permission_id" javaType="Integer"/>
+        <result property="authority" column="authority" javaType="String"/>
+    </resultMap>
+
+    <select id="getPermission" parameterType="Integer" resultMap="permission">
+        select r.*,p.authority from role_permission r left join permission p on p.id=r.permission_id where r.role_id=#{role_id}
+    </select>
+
+</mapper>
